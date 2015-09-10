@@ -47,15 +47,19 @@ private:
 
 private:
     RTC_DS1307 m_rtc;
+
+    // Current time
     DateTime m_now;
+
     AnalogClockMatrix m_matrix;
 
+    // Configuration Mode
     uint8_t m_configMode,
 
     // Skip next up
     m_skipNextUp;
 
-    // Buttons pins
+    // Buttons
     PushButton m_btnH, m_btnM;
 };
 

@@ -30,6 +30,7 @@
 
 using namespace Electro;
 
+/// Matrix (7 rows, 12 columns)
 class Matrix
 {
 public:
@@ -49,7 +50,10 @@ public:
     void render(uint32_t millis = 0);
 
 private:
+    // Two 74164 Integrated circuits representing columns
     IC_74164_x2 *m_dualIC;
+
+    // Row Pins
     uint8_t m_rowsPins[7];
 
     // Data

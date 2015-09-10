@@ -54,8 +54,8 @@ void AnalogClock::begin()
         m_rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
 
         // This line sets the RTC with an explicit date & time, for example to set
-        // January 21, 2014 at 3am you would call:
-        // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));
+        // January 21, 2015 at 3am you would call:
+        // m_rtc.adjust(DateTime(2015, 1, 21, 3, 0, 0));
     }
 
     m_matrix.begin();
@@ -126,10 +126,12 @@ uint8_t AnalogClock::config()
     m_btnH.read();
     m_btnM.read();
 
+    // Check if the hour and the minute buttons are simultaneously up
     if((m_btnH.status() == BUTTON_UP && m_btnM.status() == BUTTON_UP)
        || (m_btnH.status() == BUTTON_UP && m_btnM.status() == BUTTON_IN)
        || (m_btnH.status() == BUTTON_IN && m_btnM.status() == BUTTON_UP))
     {
+        // Switch configuration mode
         m_configMode = !m_configMode;
 
         // Skip next Button Up
@@ -144,8 +146,10 @@ uint8_t AnalogClock::config()
            m_skipNextUp =  NO_SKIP;
 
     }
+    // In Configuration Mode
     else if(m_configMode)
     {
+        // Hour button up
         if(m_btnH.status() == BUTTON_UP && m_skipNextUp != SKIP_H)
         {
             m_skipNextUp = NO_SKIP;
@@ -153,6 +157,7 @@ uint8_t AnalogClock::config()
             m_rtc.adjust(DateTime(m_now.unixtime()+3600));
             return 1;
         }
+        // Minute button up
         else if(m_btnM.status() == BUTTON_UP && m_skipNextUp != SKIP_M)
         {
             m_skipNextUp = NO_SKIP;
