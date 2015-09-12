@@ -39,8 +39,8 @@ AnalogClock::AnalogClock(IC_74164_x2 *dualIC, uint8_t rowsPins[7], uint8_t btnH,
     m_configMode(DISABLED),
     m_skipNextUp(NO_SKIP),
 
-    m_btnH(btnH, BUTTON_PULL_DOWN),
-    m_btnM(btnM, BUTTON_PULL_DOWN)
+    m_btnH(btnH, E_BUTTON_PULL_DOWN),
+    m_btnM(btnM, E_BUTTON_PULL_DOWN)
 {
 }
 
@@ -123,13 +123,13 @@ uint8_t AnalogClock::renderAndCheckConfig(uint32_t millis)
 
 uint8_t AnalogClock::config()
 {
-    m_btnH.read();
-    m_btnM.read();
+    m_btnH.check();
+    m_btnM.check();
 
     // Check if the hour and the minute buttons are simultaneously up
-    if((m_btnH.status() == BUTTON_UP && m_btnM.status() == BUTTON_UP)
-       || (m_btnH.status() == BUTTON_UP && m_btnM.status() == BUTTON_IN)
-       || (m_btnH.status() == BUTTON_IN && m_btnM.status() == BUTTON_UP))
+    if((m_btnH.state() == E_BUTTON_UP && m_btnM.state() == E_BUTTON_UP)
+       || (m_btnH.state() == E_BUTTON_UP && m_btnM.state() == E_BUTTON_IN)
+       || (m_btnH.state() == E_BUTTON_IN && m_btnM.state() == E_BUTTON_UP))
     {
         // Switch configuration mode
         m_configMode = !m_configMode;
@@ -137,9 +137,9 @@ uint8_t AnalogClock::config()
         // Skip next Button Up
         if(m_configMode)
         {
-            if(m_btnH.status() == BUTTON_IN)
+            if(m_btnH.state() == E_BUTTON_IN)
                 m_skipNextUp = SKIP_H;
-            else if(m_btnM.status() == BUTTON_IN)
+            else if(m_btnM.state() == E_BUTTON_IN)
                 m_skipNextUp = SKIP_M;
         }
         else
@@ -150,7 +150,7 @@ uint8_t AnalogClock::config()
     else if(m_configMode)
     {
         // Hour button up
-        if(m_btnH.status() == BUTTON_UP && m_skipNextUp != SKIP_H)
+        if(m_btnH.state() == E_BUTTON_UP && m_skipNextUp != SKIP_H)
         {
             m_skipNextUp = NO_SKIP;
 
@@ -158,7 +158,7 @@ uint8_t AnalogClock::config()
             return 1;
         }
         // Minute button up
-        else if(m_btnM.status() == BUTTON_UP && m_skipNextUp != SKIP_M)
+        else if(m_btnM.state() == E_BUTTON_UP && m_skipNextUp != SKIP_M)
         {
             m_skipNextUp = NO_SKIP;
 
@@ -169,3 +169,4 @@ uint8_t AnalogClock::config()
 
     return 0;
 }
+
